@@ -163,12 +163,13 @@ body.modal-open {
   margin: 0 auto;
   padding: 20px 0 48px;
   display: grid;
-  grid-template-columns: minmax(320px, 390px) minmax(0, 1fr);
+  grid-template-columns: minmax(360px, 430px) minmax(0, 1fr);
   gap: 24px;
 }
 
 .workspace {
   display: grid;
+  min-width: 0;
 }
 
 .view-panel {
@@ -188,6 +189,7 @@ body.modal-open {
 
 .intro {
   padding: 32px;
+  min-width: 0;
   background:
     linear-gradient(180deg, rgba(255, 250, 242, 0.9), rgba(248, 239, 229, 0.78)),
     radial-gradient(circle at top right, rgba(255, 255, 255, 0.7), transparent 36%);
@@ -195,8 +197,13 @@ body.modal-open {
 
 .brand-lockup {
   display: flex;
-  align-items: center;
-  gap: 18px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.brand-lockup > div {
+  min-width: 0;
 }
 
 .brand-mark {
@@ -224,8 +231,10 @@ h2,
 }
 
 h1 {
-  font-size: clamp(2.6rem, 5vw, 4.3rem);
-  max-width: 10ch;
+  font-size: clamp(2.5rem, 4.2vw, 3.9rem);
+  max-width: 8ch;
+  overflow-wrap: break-word;
+  text-wrap: balance;
 }
 
 h2,
@@ -239,6 +248,18 @@ h2,
   margin: 14px 0 0;
   color: var(--muted);
   line-height: 1.7;
+}
+
+.lead {
+  max-width: 26ch;
+}
+
+.community-title {
+  max-width: 10ch;
+}
+
+.community-copy {
+  max-width: 28ch;
 }
 
 .summary-grid {
@@ -717,11 +738,6 @@ h2,
 @media (max-width: 640px) {
   .topbar {
     padding-top: 20px;
-  }
-
-  .brand-lockup {
-    flex-direction: column;
-    align-items: flex-start;
   }
 
   h1 {
