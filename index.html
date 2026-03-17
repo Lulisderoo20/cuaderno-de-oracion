@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cuaderno de Oración</title>
+    <meta
+      name="description"
+      content="Un cuaderno de oración simple, cálido y elegante para escribir tus oraciones con guardado local automático."
+    >
+    <meta name="theme-color" content="#e9dcc6">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    >
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+    <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div class="ambient ambient-one" aria-hidden="true"></div>
+    <div class="ambient ambient-two" aria-hidden="true"></div>
+    <main class="shell">
+      <section class="intro card">
+        <div class="brand-lockup">
+          <img
+            class="brand-mark"
+            src="assets/logo-mark.svg"
+            alt="Logo del cuaderno de oración"
+            width="88"
+            height="88"
+          >
+          <div>
+            <p class="eyebrow">Cuaderno de Oración</p>
+            <h1>Un espacio sereno para volver cada día.</h1>
+            <p class="lead">
+              Una libreta digital simple, amable y silenciosa para escribir tus
+              oraciones con calma.
+            </p>
+          </div>
+        </div>
+
+        <div class="summary-grid">
+          <article class="summary-card">
+            <span>Hoy</span>
+            <strong id="today-label">Cargando fecha...</strong>
+          </article>
+          <article class="summary-card">
+            <span>Experiencia</span>
+            <strong>Minimalista y cálida</strong>
+          </article>
+          <article class="summary-card">
+            <span>Estado</span>
+            <strong id="save-status">Todo guardado</strong>
+          </article>
+        </div>
+
+        <div class="starter-block">
+          <p class="starter-label">Para empezar suave:</p>
+          <div class="starter-chips" aria-label="Ideas para comenzar la oración">
+            <button class="chip" type="button" data-prompt="Señor, hoy quiero darte gracias por...">
+              Gratitud
+            </button>
+            <button class="chip" type="button" data-prompt="Padre, necesito traer delante de Ti...">
+              Petición
+            </button>
+            <button class="chip" type="button" data-prompt="Jesús, ayúdame a descansar en...">
+              Descanso
+            </button>
+            <button class="chip" type="button" data-prompt="Espíritu Santo, guíame hoy en...">
+              Dirección
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="notebook card" aria-labelledby="entry-label">
+        <div class="toolbar">
+          <label class="field" for="entry-title">
+            <span>Titulo</span>
+            <input
+              id="entry-title"
+              name="entry-title"
+              type="text"
+              maxlength="80"
+              placeholder="Mi oracion de hoy"
+              autocomplete="off"
+            >
+          </label>
+
+          <div class="toolbar-actions">
+            <button id="export-button" class="button ghost" type="button">
+              Descargar .txt
+            </button>
+            <button id="clear-button" class="button danger" type="button">
+              Vaciar
+            </button>
+          </div>
+        </div>
+
+        <div class="writing-header">
+          <div>
+            <p class="eyebrow">Página abierta</p>
+            <h2 id="entry-label">Escribe tu oración</h2>
+          </div>
+          <p class="notebook-tip">Se guarda automáticamente en este dispositivo.</p>
+        </div>
+
+        <textarea
+          id="entry-body"
+          name="entry-body"
+          class="journal-textarea"
+          placeholder="Escribe aquí con libertad... este espacio es tuyo."
+          spellcheck="true"
+          aria-describedby="entry-meta"
+        ></textarea>
+
+        <div class="notebook-footer">
+          <p id="entry-meta">0 palabras</p>
+          <p>Siempre puedes volver y continuar donde lo dejaste.</p>
+        </div>
+      </section>
+    </main>
+
+    <script src="app.js" defer></script>
+  </body>
+</html>
