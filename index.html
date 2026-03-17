@@ -6,7 +6,7 @@
     <title>Cuaderno de Oración</title>
     <meta
       name="description"
-      content="Un cuaderno de oración simple, cálido y elegante para escribir tus oraciones con guardado local automático."
+      content="Un cuaderno de oración cálido y elegante para escribir, compartir peticiones y acompañar a otros."
     >
     <meta name="theme-color" content="#e9dcc6">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,6 +23,36 @@
   <body>
     <div class="ambient ambient-one" aria-hidden="true"></div>
     <div class="ambient ambient-two" aria-hidden="true"></div>
+
+    <header class="topbar">
+      <div class="topbar-brand">
+        <img
+          class="topbar-mark"
+          src="assets/logo-mark.svg"
+          alt="Logo del cuaderno de oración"
+          width="50"
+          height="50"
+        >
+        <div>
+          <p class="eyebrow">Cuaderno de Oración</p>
+          <p class="topbar-copy">Escribe, comparte y acompaña.</p>
+        </div>
+      </div>
+
+      <nav class="view-switch" aria-label="Secciones principales">
+        <button class="nav-button is-active" type="button" data-view-target="notebook">
+          Mi cuaderno
+        </button>
+        <button class="nav-button" type="button" data-view-target="center">
+          Oraciones
+        </button>
+      </nav>
+
+      <button id="open-share-primary" class="button solid" type="button">
+        Subir al centro
+      </button>
+    </header>
+
     <main class="shell">
       <section class="intro card">
         <div class="brand-lockup">
@@ -35,10 +65,10 @@
           >
           <div>
             <p class="eyebrow">Cuaderno de Oración</p>
-            <h1>Un espacio sereno para volver cada día.</h1>
+            <h1>Escribe tu oración y compártela si quieres.</h1>
             <p class="lead">
-              Una libreta digital simple, amable y silenciosa para escribir tus
-              oraciones con calma.
+              Tu libreta sigue siendo íntima y simple, pero ahora también puede
+              abrirse a una comunidad de oración cuando tú lo decidas.
             </p>
           </div>
         </div>
@@ -49,8 +79,8 @@
             <strong id="today-label">Cargando fecha...</strong>
           </article>
           <article class="summary-card">
-            <span>Experiencia</span>
-            <strong>Minimalista y cálida</strong>
+            <span>Centro</span>
+            <strong id="center-count">Todavía no cargado</strong>
           </article>
           <article class="summary-card">
             <span>Estado</span>
@@ -75,55 +105,211 @@
             </button>
           </div>
         </div>
+
+        <div class="community-panel">
+          <p class="eyebrow">Centro de Oraciones</p>
+          <h2 class="community-title">Una sección compartida para acompañarnos.</h2>
+          <p class="community-copy">
+            Publica tu pedido con tu nombre o en anónimo, y entra a ver todas
+            las oraciones de la comunidad desde el botón <strong>Oraciones</strong>.
+          </p>
+          <div class="community-actions">
+            <button id="open-share-secondary" class="button solid" type="button">
+              Subir oración al centro
+            </button>
+            <button
+              id="open-center-secondary"
+              class="button ghost"
+              type="button"
+              data-view-target="center"
+            >
+              Ver Oraciones
+            </button>
+          </div>
+        </div>
       </section>
 
-      <section class="notebook card" aria-labelledby="entry-label">
-        <div class="toolbar">
-          <label class="field" for="entry-title">
-            <span>Titulo</span>
+      <div class="workspace">
+        <section
+          class="notebook card view-panel"
+          data-view-panel="notebook"
+          aria-labelledby="entry-label"
+        >
+          <div class="toolbar">
+            <label class="field" for="entry-title">
+              <span>Título</span>
+              <input
+                id="entry-title"
+                name="entry-title"
+                type="text"
+                maxlength="80"
+                placeholder="Mi oración de hoy"
+                autocomplete="off"
+              >
+            </label>
+
+            <div class="toolbar-actions">
+              <button id="share-from-notebook" class="button soft" type="button">
+                Subir oración
+              </button>
+              <button id="export-button" class="button ghost" type="button">
+                Descargar .txt
+              </button>
+              <button id="clear-button" class="button danger" type="button">
+                Vaciar
+              </button>
+            </div>
+          </div>
+
+          <div class="writing-header">
+            <div>
+              <p class="eyebrow">Página abierta</p>
+              <h2 id="entry-label">Escribe tu oración</h2>
+            </div>
+            <p class="notebook-tip">Un rincón simple para escribir sin distracciones.</p>
+          </div>
+
+          <textarea
+            id="entry-body"
+            name="entry-body"
+            class="journal-textarea"
+            placeholder="Escribe aquí con libertad... este espacio es tuyo."
+            spellcheck="true"
+            aria-describedby="entry-meta"
+          ></textarea>
+
+          <div class="notebook-footer">
+            <p id="entry-meta">0 palabras</p>
+            <p>Cuando quieras, puedes transformar esta misma oración en un pedido compartido.</p>
+          </div>
+        </section>
+
+        <section
+          class="prayer-center card view-panel is-hidden"
+          data-view-panel="center"
+          aria-labelledby="center-title"
+        >
+          <div class="center-header">
+            <div>
+              <p class="eyebrow">Oraciones</p>
+              <h2 id="center-title">Centro de Oraciones</h2>
+            </div>
+
+            <div class="toolbar-actions">
+              <button id="refresh-prayers" class="button ghost" type="button">
+                Actualizar
+              </button>
+              <button id="open-share-tertiary" class="button solid" type="button">
+                Subir oración
+              </button>
+            </div>
+          </div>
+
+          <div class="center-summary">
+            <article class="center-summary-card">
+              <span>Total de pedidos</span>
+              <strong id="prayer-total">0</strong>
+            </article>
+            <article class="center-summary-card">
+              <span>Última actividad</span>
+              <strong id="latest-prayer-label">Aún no hay pedidos</strong>
+            </article>
+          </div>
+
+          <p id="center-feedback" class="center-feedback">Cargando oraciones...</p>
+
+          <div id="prayer-list" class="prayer-list" aria-live="polite"></div>
+        </section>
+      </div>
+    </main>
+
+    <section id="share-overlay" class="overlay is-hidden" aria-hidden="true">
+      <div class="dialog card" role="dialog" aria-modal="true" aria-labelledby="share-title">
+        <button id="close-share" class="icon-button" type="button" aria-label="Cerrar formulario">
+          ×
+        </button>
+
+        <p class="eyebrow">Centro de Oraciones</p>
+        <h2 id="share-title">Sube tu oración al centro</h2>
+        <p class="dialog-lead">
+          Puedes aparecer con tu nombre, en anónimo, o dejar preparada la opción
+          de Google para una próxima versión.
+        </p>
+
+        <form id="share-form" class="share-form">
+          <label class="field">
+            <span>Motivo breve</span>
             <input
-              id="entry-title"
-              name="entry-title"
+              id="share-topic"
+              name="share-topic"
               type="text"
-              maxlength="80"
-              placeholder="Mi oracion de hoy"
+              maxlength="120"
+              placeholder="Por paz, salud, trabajo, familia..."
               autocomplete="off"
+              required
             >
           </label>
 
-          <div class="toolbar-actions">
-            <button id="export-button" class="button ghost" type="button">
-              Descargar .txt
+          <label class="field field-large">
+            <span>Detalle del pedido</span>
+            <textarea
+              id="share-detail"
+              name="share-detail"
+              class="share-textarea"
+              maxlength="2000"
+              placeholder="Cuéntanos qué quieres que estemos orando por ti."
+              required
+            ></textarea>
+          </label>
+
+          <div class="identity-panel">
+            <span class="field-caption">Cómo quieres aparecer</span>
+
+            <div class="identity-grid" role="radiogroup" aria-label="Forma de publicación">
+              <label class="identity-option is-selected">
+                <input type="radio" name="identity" value="named" checked>
+                <strong>Con mi nombre</strong>
+                <span>Tu nombre quedará visible junto al pedido.</span>
+              </label>
+
+              <label class="identity-option">
+                <input type="radio" name="identity" value="anonymous">
+                <strong>Anónimo</strong>
+                <span>Se publica sin identificarte.</span>
+              </label>
+
+              <div class="identity-option identity-option-disabled" aria-disabled="true">
+                <strong>Google</strong>
+                <span>Próximamente</span>
+              </div>
+            </div>
+          </div>
+
+          <label id="share-name-field" class="field">
+            <span>Tu nombre</span>
+            <input
+              id="share-name"
+              name="share-name"
+              type="text"
+              maxlength="60"
+              placeholder="Cómo quieres figurar"
+              autocomplete="name"
+            >
+          </label>
+
+          <div class="share-footer">
+            <button id="use-notebook-content" class="button ghost" type="button">
+              Usar texto del cuaderno
             </button>
-            <button id="clear-button" class="button danger" type="button">
-              Vaciar
+            <button id="submit-share" class="button solid" type="submit">
+              Publicar en el centro
             </button>
           </div>
-        </div>
 
-        <div class="writing-header">
-          <div>
-            <p class="eyebrow">Página abierta</p>
-            <h2 id="entry-label">Escribe tu oración</h2>
-          </div>
-          <p class="notebook-tip">Un rincón simple para escribir sin distracciones.</p>
-        </div>
-
-        <textarea
-          id="entry-body"
-          name="entry-body"
-          class="journal-textarea"
-          placeholder="Escribe aquí con libertad... este espacio es tuyo."
-          spellcheck="true"
-          aria-describedby="entry-meta"
-        ></textarea>
-
-        <div class="notebook-footer">
-          <p id="entry-meta">0 palabras</p>
-          <p>Siempre puedes volver y continuar donde lo dejaste.</p>
-        </div>
-      </section>
-    </main>
+          <p id="share-feedback" class="share-feedback" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
 
     <script src="app.js" defer></script>
   </body>

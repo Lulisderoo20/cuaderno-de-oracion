@@ -2,3 +2,7 @@ name = "cuaderno-de-oracion"
 compatibility_date = "2026-03-16"
 pages_build_output_dir = "."
 
+[[d1_databases]]
+binding = "DB"
+database_name = "cuaderno-de-oracion-db"
+database_id = "67032749-1ec5-4d5f-b825-e04117c04214"
