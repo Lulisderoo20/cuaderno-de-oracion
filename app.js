@@ -27,6 +27,7 @@ const refreshPrayersButton = document.querySelector("#refresh-prayers");
 const installButton = document.querySelector("#install-app");
 const installFeedback = document.querySelector("#install-feedback");
 const overlay = document.querySelector("#share-overlay");
+const shareDialog = document.querySelector("#share-dialog");
 const openShareButtons = document.querySelectorAll(
   "#open-share-primary, #open-share-secondary, #open-share-tertiary, #share-from-notebook"
 );
@@ -239,6 +240,20 @@ function updateInstallUi() {
   );
 }
 
+function deriveNotebookTopic() {
+  const title = titleInput.value.trim();
+  if (title) {
+    return title;
+  }
+
+  const firstLine = bodyInput.value
+    .split("\n")
+    .map((line) => line.trim())
+    .find(Boolean);
+
+  return firstLine ? firstLine.slice(0, 120) : "Oración desde mi cuaderno";
+}
+
 function renderPrayerStats() {
   const total = state.prayers.length;
   prayerTotal.textContent = `${total}`;
@@ -373,12 +388,11 @@ function syncIdentitySelection() {
 }
 
 function fillShareFormFromNotebook() {
-  if (!shareTopic.value.trim() && titleInput.value.trim()) {
-    shareTopic.value = titleInput.value.trim();
-  }
+  shareTopic.value = deriveNotebookTopic();
+  shareDetail.value = bodyInput.value.trim();
 
-  if (!shareDetail.value.trim() && bodyInput.value.trim()) {
-    shareDetail.value = bodyInput.value.trim();
+  if (shareDialog.classList.contains("is-notebook-share")) {
+    return;
   }
 
   if (!shareTopic.value.trim()) {
@@ -391,7 +405,18 @@ function fillShareFormFromNotebook() {
 
 function openShareOverlay(prefillFromNotebook = false) {
   if (prefillFromNotebook) {
+    if (bodyInput.value.trim().length < 12) {
+      window.alert(
+        "Escribe una oración un poco más completa en tu cuaderno antes de subirla al centro."
+      );
+      bodyInput.focus();
+      return;
+    }
+
+    shareDialog.classList.add("is-notebook-share");
     fillShareFormFromNotebook();
+  } else {
+    shareDialog.classList.remove("is-notebook-share");
   }
 
   overlay.classList.remove("is-hidden");
@@ -400,6 +425,16 @@ function openShareOverlay(prefillFromNotebook = false) {
   setShareFeedback("");
 
   window.setTimeout(() => {
+    if (prefillFromNotebook) {
+      if (getSelectedIdentity() === "named") {
+        shareName.focus();
+        return;
+      }
+
+      document.querySelector('input[name="identity"]:checked')?.focus();
+      return;
+    }
+
     shareTopic.focus();
   }, 40);
 }
@@ -408,6 +443,7 @@ function closeShareOverlay() {
   overlay.classList.add("is-hidden");
   overlay.setAttribute("aria-hidden", "true");
   document.body.classList.remove("modal-open");
+  shareDialog.classList.remove("is-notebook-share");
 }
 
 async function submitPrayer(event) {

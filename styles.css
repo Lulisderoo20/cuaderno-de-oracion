@@ -621,6 +621,10 @@ h2,
   max-width: 56ch;
 }
 
+.share-dialog-head {
+  display: grid;
+}
+
 .icon-button {
   position: absolute;
   top: 18px;
@@ -637,6 +641,11 @@ h2,
 
 .share-form {
   margin-top: 22px;
+  display: grid;
+  gap: 18px;
+}
+
+.share-compose-fields {
   display: grid;
   gap: 18px;
 }
@@ -701,6 +710,19 @@ h2,
 
 .share-feedback.is-success {
   color: var(--success);
+}
+
+.dialog.is-notebook-share {
+  width: min(740px, 100%);
+}
+
+.dialog.is-notebook-share .share-dialog-head,
+.dialog.is-notebook-share .share-compose-fields {
+  display: none;
+}
+
+.dialog.is-notebook-share .share-form {
+  margin-top: 6px;
 }
 
 @media (max-width: 1100px) {

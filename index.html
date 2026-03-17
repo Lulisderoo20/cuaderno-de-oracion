@@ -234,43 +234,53 @@
     </main>
 
     <section id="share-overlay" class="overlay is-hidden" aria-hidden="true">
-      <div class="dialog card" role="dialog" aria-modal="true" aria-labelledby="share-title">
+      <div
+        id="share-dialog"
+        class="dialog card"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="share-title"
+      >
         <button id="close-share" class="icon-button" type="button" aria-label="Cerrar formulario">
           ×
         </button>
 
-        <p class="eyebrow">Centro de Oraciones</p>
-        <h2 id="share-title">Sube tu oración al centro</h2>
-        <p class="dialog-lead">
-          Puedes aparecer con tu nombre, en anónimo, o dejar preparada la opción
-          de Google para una próxima versión.
-        </p>
+        <div class="share-dialog-head">
+          <p class="eyebrow">Centro de Oraciones</p>
+          <h2 id="share-title">Sube tu oración al centro</h2>
+          <p class="dialog-lead">
+            Puedes aparecer con tu nombre, en anónimo, o dejar preparada la opción
+            de Google para una próxima versión.
+          </p>
+        </div>
 
         <form id="share-form" class="share-form">
-          <label class="field">
-            <span>Motivo breve</span>
-            <input
-              id="share-topic"
-              name="share-topic"
-              type="text"
-              maxlength="120"
-              placeholder="Por paz, salud, trabajo, familia..."
-              autocomplete="off"
-              required
-            >
-          </label>
+          <div class="share-compose-fields">
+            <label class="field">
+              <span>Motivo breve</span>
+              <input
+                id="share-topic"
+                name="share-topic"
+                type="text"
+                maxlength="120"
+                placeholder="Por paz, salud, trabajo, familia..."
+                autocomplete="off"
+                required
+              >
+            </label>
 
-          <label class="field field-large">
-            <span>Detalle del pedido</span>
-            <textarea
-              id="share-detail"
-              name="share-detail"
-              class="share-textarea"
-              maxlength="2000"
-              placeholder="Cuéntanos qué quieres que estemos orando por ti."
-              required
-            ></textarea>
-          </label>
+            <label class="field field-large">
+              <span>Detalle del pedido</span>
+              <textarea
+                id="share-detail"
+                name="share-detail"
+                class="share-textarea"
+                maxlength="2000"
+                placeholder="Cuéntanos qué quieres que estemos orando por ti."
+                required
+              ></textarea>
+            </label>
+          </div>
 
           <div class="identity-panel">
             <span class="field-caption">Cómo quieres aparecer</span>
