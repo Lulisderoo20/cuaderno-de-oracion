@@ -34,9 +34,9 @@ body {
   position: relative;
   overflow-x: hidden;
   background:
-    radial-gradient(circle at top left, rgba(244, 217, 188, 0.72), transparent 34%),
-    radial-gradient(circle at 85% 18%, rgba(194, 176, 143, 0.4), transparent 22%),
-    linear-gradient(160deg, #f8f2e9 0%, #efe3d3 48%, #f7f0e5 100%);
+    linear-gradient(rgba(248, 241, 232, 0.7), rgba(242, 229, 212, 0.76)),
+    url("./assets/backgrounds/fondo.png") center top / cover no-repeat fixed;
+  background-color: #efe3d3;
   color: var(--ink);
   font-family: "Manrope", "Segoe UI", sans-serif;
 }
@@ -47,9 +47,10 @@ body::before {
   inset: 0;
   pointer-events: none;
   background:
-    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0, rgba(255, 255, 255, 0.08) 1px, transparent 1px, transparent 60px),
-    linear-gradient(rgba(255, 255, 255, 0.05) 0, rgba(255, 255, 255, 0.05) 1px, transparent 1px, transparent 60px);
-  opacity: 0.3;
+    radial-gradient(circle at top left, rgba(244, 217, 188, 0.42), transparent 34%),
+    radial-gradient(circle at 85% 18%, rgba(194, 176, 143, 0.24), transparent 22%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.03));
+  opacity: 1;
 }
 
 body.modal-open {
@@ -844,6 +845,13 @@ h2,
 }
 
 @media (max-width: 640px) {
+  body {
+    background:
+      linear-gradient(rgba(248, 241, 232, 0.74), rgba(242, 229, 212, 0.8)),
+      url("./assets/backgrounds/fondo-cel.png") center top / cover no-repeat fixed;
+    background-color: #efe3d3;
+  }
+
   .topbar {
     padding-top: 20px;
   }

@@ -1,4 +1,4 @@
-const CACHE_NAME = "cuaderno-oracion-v7";
+const CACHE_NAME = "cuaderno-oracion-v8";
 const APP_ASSETS = [
   "./",
   "./index.html",
@@ -7,6 +7,8 @@ const APP_ASSETS = [
   "./manifest.webmanifest",
   "./assets/logo-mark.svg",
   "./assets/favicon.svg",
+  "./assets/backgrounds/fondo.png",
+  "./assets/backgrounds/fondo-cel.png",
   "./assets/icons/icon-192.png",
   "./assets/icons/icon-512.png",
 ];
