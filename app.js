@@ -24,6 +24,8 @@ const latestPrayerLabel = document.querySelector("#latest-prayer-label");
 const prayerList = document.querySelector("#prayer-list");
 const centerFeedback = document.querySelector("#center-feedback");
 const refreshPrayersButton = document.querySelector("#refresh-prayers");
+const installButton = document.querySelector("#install-app");
+const installFeedback = document.querySelector("#install-feedback");
 const overlay = document.querySelector("#share-overlay");
 const openShareButtons = document.querySelectorAll(
   "#open-share-primary, #open-share-secondary, #open-share-tertiary, #share-from-notebook"
@@ -39,6 +41,7 @@ const useNotebookContentButton = document.querySelector("#use-notebook-content")
 const submitShareButton = document.querySelector("#submit-share");
 const identityOptions = document.querySelectorAll(".identity-option");
 const identityInputs = document.querySelectorAll('input[name="identity"]');
+let deferredInstallPrompt = null;
 
 function resolveApiOrigin() {
   if (window.location.hostname === "lulisderoo20.github.io") {
@@ -46,6 +49,17 @@ function resolveApiOrigin() {
   }
 
   return window.location.origin;
+}
+
+function isStandaloneMode() {
+  return (
+    window.matchMedia("(display-mode: standalone)").matches ||
+    window.navigator.standalone === true
+  );
+}
+
+function isIOSDevice() {
+  return /iphone|ipad|ipod/i.test(window.navigator.userAgent);
 }
 
 function setToday() {
@@ -187,6 +201,42 @@ function setShareFeedback(message, variant = "") {
   shareFeedback.textContent = message;
   shareFeedback.classList.toggle("is-error", variant === "error");
   shareFeedback.classList.toggle("is-success", variant === "success");
+}
+
+function setInstallFeedback(message, variant = "") {
+  installFeedback.textContent = message;
+  installFeedback.classList.toggle("is-success", variant === "success");
+}
+
+function updateInstallUi() {
+  if (isStandaloneMode()) {
+    installButton.textContent = "App instalada";
+    installButton.disabled = true;
+    setInstallFeedback(
+      "Ya la tienes instalada en este dispositivo.",
+      "success"
+    );
+    return;
+  }
+
+  installButton.disabled = false;
+  installButton.textContent = "Descargar app";
+
+  if (deferredInstallPrompt) {
+    setInstallFeedback("Instálala para abrirla como una app en este dispositivo.");
+    return;
+  }
+
+  if (isIOSDevice()) {
+    setInstallFeedback(
+      "En iPhone o iPad: usa Compartir y luego Añadir a pantalla de inicio."
+    );
+    return;
+  }
+
+  setInstallFeedback(
+    "Si no aparece el diálogo, usa el menú del navegador y elige Instalar app."
+  );
 }
 
 function renderPrayerStats() {
@@ -424,6 +474,44 @@ async function submitPrayer(event) {
   }
 }
 
+async function handleInstallClick() {
+  if (isStandaloneMode()) {
+    updateInstallUi();
+    return;
+  }
+
+  if (deferredInstallPrompt) {
+    deferredInstallPrompt.prompt();
+    const choice = await deferredInstallPrompt.userChoice;
+    deferredInstallPrompt = null;
+
+    if (choice.outcome === "accepted") {
+      setInstallFeedback(
+        "La app se está instalando en este dispositivo.",
+        "success"
+      );
+    } else {
+      setInstallFeedback(
+        "Puedes instalarla cuando quieras desde este mismo botón."
+      );
+    }
+
+    updateInstallUi();
+    return;
+  }
+
+  if (isIOSDevice()) {
+    setInstallFeedback(
+      "En iPhone o iPad: usa Compartir y luego Añadir a pantalla de inicio."
+    );
+    return;
+  }
+
+  setInstallFeedback(
+    "Abre el menú del navegador y elige Instalar app para descargarla."
+  );
+}
+
 titleInput.addEventListener("input", scheduleNotebookSave);
 
 bodyInput.addEventListener("input", () => {
@@ -434,6 +522,7 @@ bodyInput.addEventListener("input", () => {
 exportButton.addEventListener("click", downloadEntry);
 clearButton.addEventListener("click", clearEntry);
 refreshPrayersButton.addEventListener("click", loadPrayers);
+installButton.addEventListener("click", handleInstallClick);
 shareForm.addEventListener("submit", submitPrayer);
 useNotebookContentButton.addEventListener("click", fillShareFormFromNotebook);
 closeShareButton.addEventListener("click", closeShareOverlay);
@@ -470,6 +559,22 @@ window.addEventListener("keydown", (event) => {
   }
 });
 
+window.addEventListener("beforeinstallprompt", (event) => {
+  event.preventDefault();
+  deferredInstallPrompt = event;
+  updateInstallUi();
+});
+
+window.addEventListener("appinstalled", () => {
+  deferredInstallPrompt = null;
+  installButton.textContent = "App instalada";
+  setInstallFeedback(
+    "La app quedó instalada. Ahora puedes abrirla como una app normal.",
+    "success"
+  );
+  updateInstallUi();
+});
+
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("sw.js").catch((error) => {
@@ -481,4 +586,5 @@ if ("serviceWorker" in navigator) {
 setToday();
 loadNotebook();
 syncIdentitySelection();
+updateInstallUi();
 setView("notebook");

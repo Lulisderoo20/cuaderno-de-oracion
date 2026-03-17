@@ -1,4 +1,4 @@
-const CACHE_NAME = "cuaderno-oracion-v3";
+const CACHE_NAME = "cuaderno-oracion-v4";
 const APP_ASSETS = [
   "./",
   "./index.html",

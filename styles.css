@@ -110,6 +110,33 @@ body.modal-open {
   font-size: 0.95rem;
 }
 
+.topbar-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.topbar-cta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.install-feedback {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.5;
+  max-width: 28ch;
+  text-align: right;
+}
+
+.install-feedback.is-success {
+  color: var(--success);
+}
+
 .view-switch {
   display: inline-flex;
   align-items: center;
@@ -692,6 +719,17 @@ h2,
   .topbar {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .topbar-actions,
+  .topbar-cta {
+    align-items: stretch;
+    justify-content: flex-start;
+  }
+
+  .install-feedback {
+    max-width: none;
+    text-align: left;
   }
 
   .shell {
