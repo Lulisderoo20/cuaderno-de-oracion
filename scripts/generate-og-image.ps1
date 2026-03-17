@@ -22,7 +22,7 @@ function New-RoundedRectPath {
 $repoRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
 $assetsDir = Join-Path $repoRoot "assets"
 $outputPath = Join-Path $assetsDir "og-image.png"
-$logoPath = Join-Path $assetsDir "icons\icon-512.png"
+$logoPath = Join-Path $assetsDir "branding\jesus-oracion-app.png"
 
 $width = 1200
 $height = 630
@@ -59,7 +59,14 @@ $cardBorder = New-Object System.Drawing.Pen([System.Drawing.Color]::FromArgb(70,
 $graphics.DrawPath($cardBorder, $cardPath)
 
 $logo = [System.Drawing.Image]::FromFile($logoPath)
-$graphics.DrawImage($logo, 110, 105, 160, 160)
+$logoFramePath = New-RoundedRectPath -X 102 -Y 105 -Width 170 -Height 240 -Radius 34
+$graphics.SetClip($logoFramePath)
+$sourceRect = New-Object System.Drawing.RectangleF 120, 120, 780, 930
+$destRect = New-Object System.Drawing.RectangleF 102, 105, 170, 240
+$graphics.DrawImage($logo, $destRect, $sourceRect, [System.Drawing.GraphicsUnit]::Pixel)
+$graphics.ResetClip()
+$logoFrameBorder = New-Object System.Drawing.Pen([System.Drawing.Color]::FromArgb(85, 164, 123, 82), 2)
+$graphics.DrawPath($logoFrameBorder, $logoFramePath)
 
 $eyebrowFont = New-Object System.Drawing.Font("Segoe UI", 22, [System.Drawing.FontStyle]::Bold)
 $titleFont = New-Object System.Drawing.Font("Georgia", 36, [System.Drawing.FontStyle]::Bold)
@@ -74,9 +81,9 @@ $pillTextBrush = New-Object System.Drawing.SolidBrush([System.Drawing.ColorTrans
 $pillBrush = New-Object System.Drawing.SolidBrush([System.Drawing.ColorTranslator]::FromHtml("#af6d45"))
 $panelBrush = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(165, 255, 252, 247))
 
-$graphics.DrawString("CUADERNO DE ORACION", $eyebrowFont, $accentBrush, 305, 105)
+$graphics.DrawString("CUADERNO DE ORACION", $eyebrowFont, $accentBrush, 320, 105)
 
-$titleRect = New-Object System.Drawing.RectangleF 305, 150, 630, 170
+$titleRect = New-Object System.Drawing.RectangleF 320, 150, 610, 170
 $titleFormat = New-Object System.Drawing.StringFormat
 $titleFormat.Trimming = [System.Drawing.StringTrimming]::Word
 $graphics.DrawString(
@@ -87,7 +94,7 @@ $graphics.DrawString(
   $titleFormat
 )
 
-$bodyRect = New-Object System.Drawing.RectangleF 305, 340, 620, 110
+$bodyRect = New-Object System.Drawing.RectangleF 320, 340, 600, 110
 $bodyFormat = New-Object System.Drawing.StringFormat
 $bodyFormat.Trimming = [System.Drawing.StringTrimming]::Word
 $graphics.DrawString(
@@ -98,9 +105,9 @@ $graphics.DrawString(
   $bodyFormat
 )
 
-$pillPath = New-RoundedRectPath -X 305 -Y 470 -Width 295 -Height 60 -Radius 28
+$pillPath = New-RoundedRectPath -X 320 -Y 470 -Width 295 -Height 60 -Radius 28
 $graphics.FillPath($pillBrush, $pillPath)
-$graphics.DrawString("Centro de Oraciones", $pillFont, $pillTextBrush, 338, 485)
+$graphics.DrawString("Centro de Oraciones", $pillFont, $pillTextBrush, 353, 485)
 
 $sidePath = New-RoundedRectPath -X 880 -Y 120 -Width 210 -Height 360 -Radius 30
 $graphics.FillPath($panelBrush, $sidePath)
@@ -129,9 +136,11 @@ $pillTextBrush.Dispose()
 $pillBrush.Dispose()
 $panelBrush.Dispose()
 $linePen.Dispose()
+$logoFrameBorder.Dispose()
 $cardBorder.Dispose()
 $cardBrush.Dispose()
 $cardPath.Dispose()
+$logoFramePath.Dispose()
 $pillPath.Dispose()
 $sidePath.Dispose()
 $glowBrush.Dispose()
