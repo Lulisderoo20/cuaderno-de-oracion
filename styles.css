@@ -540,6 +540,54 @@ h2,
   line-height: 1.6;
 }
 
+.month-browser {
+  margin-top: 20px;
+}
+
+.month-browser-label {
+  margin: 0 0 12px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.month-filter-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.month-filter-button {
+  min-height: 42px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(141, 104, 72, 0.08);
+  color: var(--accent-deep);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    background-color 180ms ease,
+    color 180ms ease;
+}
+
+.month-filter-button:hover,
+.month-filter-button:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(104, 65, 41, 0.12);
+}
+
+.month-filter-button.is-active {
+  background: var(--accent);
+  color: #fffaf5;
+  box-shadow: 0 12px 24px rgba(130, 81, 51, 0.18);
+}
+
 .prayer-list {
   margin-top: 22px;
   display: grid;

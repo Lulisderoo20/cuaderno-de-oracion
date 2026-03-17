@@ -6,6 +6,7 @@ const state = {
   hasLoadedPrayers: false,
   isLoadingPrayers: false,
   saveTimer: undefined,
+  selectedPrayerMonthKey: getCurrentPrayerMonthKey(),
 };
 
 const titleInput = document.querySelector("#entry-title");
@@ -23,6 +24,7 @@ const prayerTotal = document.querySelector("#prayer-total");
 const latestPrayerLabel = document.querySelector("#latest-prayer-label");
 const prayerList = document.querySelector("#prayer-list");
 const centerFeedback = document.querySelector("#center-feedback");
+const monthFilterList = document.querySelector("#month-filter-list");
 const refreshPrayersButton = document.querySelector("#refresh-prayers");
 const installButton = document.querySelector("#install-app");
 const installFeedback = document.querySelector("#install-feedback");
@@ -254,6 +256,83 @@ function deriveNotebookTopic() {
   return firstLine ? firstLine.slice(0, 120) : "Oración desde mi cuaderno";
 }
 
+function getCurrentPrayerMonthKey() {
+  const now = new Date();
+  const month = `${now.getMonth() + 1}`.padStart(2, "0");
+  return `${now.getFullYear()}-${month}`;
+}
+
+function getPrayerMonthKey(value) {
+  const date = new Date(value);
+  const month = `${date.getMonth() + 1}`.padStart(2, "0");
+  return `${date.getFullYear()}-${month}`;
+}
+
+function formatPrayerMonthLabel(monthKey) {
+  const [year, month] = monthKey.split("-");
+  const date = new Date(Number(year), Number(month) - 1, 1);
+  return new Intl.DateTimeFormat("es-AR", {
+    month: "long",
+    year: "numeric",
+  }).format(date);
+}
+
+function getPrayerMonthGroups() {
+  const groups = new Map();
+
+  state.prayers.forEach((prayer) => {
+    const monthKey = getPrayerMonthKey(prayer.created_at);
+    if (!groups.has(monthKey)) {
+      groups.set(monthKey, []);
+    }
+
+    groups.get(monthKey).push(prayer);
+  });
+
+  return groups;
+}
+
+function renderMonthFilters(groups) {
+  monthFilterList.innerHTML = "";
+
+  if (groups.size === 0) {
+    return;
+  }
+
+  Array.from(groups.keys())
+    .sort((left, right) => right.localeCompare(left))
+    .forEach((monthKey) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "month-filter-button";
+      button.textContent = formatPrayerMonthLabel(monthKey);
+      button.classList.toggle("is-active", state.selectedPrayerMonthKey === monthKey);
+      button.addEventListener("click", () => {
+        state.selectedPrayerMonthKey = monthKey;
+        renderPrayers();
+      });
+      monthFilterList.append(button);
+    });
+}
+
+function renderEmptyMonth(monthKey, hasOtherMonths) {
+  const emptyCard = document.createElement("article");
+  emptyCard.className = "prayer-empty";
+  const monthLabel = formatPrayerMonthLabel(monthKey);
+
+  emptyCard.innerHTML = hasOtherMonths
+    ? `
+      <strong>No hay oraciones visibles en ${monthLabel}.</strong>
+      <p>Prueba entrando a otro mes para ver pedidos anteriores de la comunidad.</p>
+    `
+    : `
+      <strong>El centro todavía está comenzando.</strong>
+      <p>Sé la primera persona en subir una oración para que otros puedan acompañarte.</p>
+    `;
+
+  prayerList.append(emptyCard);
+}
+
 function renderPrayerStats() {
   const total = state.prayers.length;
   prayerTotal.textContent = `${total}`;
@@ -266,20 +345,30 @@ function renderPrayerStats() {
 
 function renderPrayers() {
   prayerList.innerHTML = "";
+  const groups = getPrayerMonthGroups();
+  const currentMonthKey = getCurrentPrayerMonthKey();
+
+  if (!state.selectedPrayerMonthKey) {
+    state.selectedPrayerMonthKey = currentMonthKey;
+  }
+
+  renderMonthFilters(groups);
 
   if (state.prayers.length === 0) {
-    const emptyCard = document.createElement("article");
-    emptyCard.className = "prayer-empty";
-    emptyCard.innerHTML = `
-      <strong>El centro todavía está comenzando.</strong>
-      <p>Sé la primera persona en subir una oración para que otros puedan acompañarte.</p>
-    `;
-    prayerList.append(emptyCard);
+    renderEmptyMonth(state.selectedPrayerMonthKey, false);
     renderPrayerStats();
     return;
   }
 
-  state.prayers.forEach((prayer) => {
+  const selectedPrayers = groups.get(state.selectedPrayerMonthKey) ?? [];
+
+  if (selectedPrayers.length === 0) {
+    renderEmptyMonth(state.selectedPrayerMonthKey, groups.size > 0);
+    renderPrayerStats();
+    return;
+  }
+
+  selectedPrayers.forEach((prayer) => {
     const card = document.createElement("article");
     card.className = "prayer-card";
 
@@ -292,10 +381,9 @@ function renderPrayers() {
 
     const meta = document.createElement("p");
     meta.className = "prayer-meta";
-    meta.textContent =
-      prayer.author_mode === "anonymous"
-        ? "Pedido anónimo"
-        : `Pedido por ${prayer.author_name}`;
+    meta.textContent = `De: ${
+      prayer.author_mode === "anonymous" ? "Anónimo" : prayer.author_name
+    }`;
 
     headingBlock.append(title, meta);
 
@@ -348,6 +436,9 @@ async function loadPrayers() {
 
     const data = await response.json();
     state.prayers = Array.isArray(data.prayers) ? data.prayers : [];
+    if (!state.hasLoadedPrayers) {
+      state.selectedPrayerMonthKey = getCurrentPrayerMonthKey();
+    }
     state.hasLoadedPrayers = true;
     renderPrayers();
     setCenterFeedback(
